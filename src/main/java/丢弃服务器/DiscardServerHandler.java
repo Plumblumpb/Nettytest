@@ -13,6 +13,7 @@ import io.netty.util.ReferenceCountUtil;
 /**
  * 处理服务端 channel.
  */
+//注意点使用ChannelInboundHandlerAdapter时 不需要调用super.xxxMethod()
 public class DiscardServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
@@ -20,13 +21,17 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
         // 默默地丢弃收到的数据
 //        ByteBuf 是一个引用计数对象
-        ((ByteBuf) msg).release(); // (3)
+//        ((ByteBuf) msg).release(); // (3)
 
-//        try {
-//            // Do something with msg
-//        } finally {
-//            ReferenceCountUtil.release(msg);
-//        }
+        ByteBuf in = (ByteBuf) msg;
+        try {
+            while (in.isReadable()) { // (1)
+                System.out.print((char) in.readByte());
+                System.out.flush();
+            }
+        } finally {
+            ReferenceCountUtil.release(msg); // (2)
+        }
 
     }
 

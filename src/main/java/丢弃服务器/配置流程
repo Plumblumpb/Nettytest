@@ -1,0 +1,5 @@
+配置流程
+1.继承ChannelInboundHandlerAdapter并重写方法
+channelRead（收到消息时被调用）
+Server
+    1.配置
