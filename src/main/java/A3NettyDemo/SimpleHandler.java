@@ -18,7 +18,6 @@ public class SimpleHandler extends ChannelInboundHandlerAdapter{
 			String content = req.toString(Charset.defaultCharset());
 			System.out.println(content);
 			ctx.channel().writeAndFlush("李四\r\n");
-			
 		}
 		
 		
