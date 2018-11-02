@@ -16,13 +16,13 @@ public class NettyServer {
 	
 	public static void main(String[] args) {
 //		负责接收客户端的连接并将SocketChannel交给WorkerEventLoopGroup来进行IO处理。
-		EventLoopGroup parentGroup = new NioEventLoopGroup(1);
+		EventLoopGroup boss = new NioEventLoopGroup(1);
 //		负责io处理
-		EventLoopGroup childGroup = new NioEventLoopGroup();
+		EventLoopGroup worker = new NioEventLoopGroup();
 		try {
 			ServerBootstrap serverBootstrap = new ServerBootstrap();
 //			配置线程模型
-			serverBootstrap.group(parentGroup, childGroup);
+			serverBootstrap.group(boss, worker);
 //			配置channel类型。
 			serverBootstrap.channel(NioServerSocketChannel.class);
 //			配置socket的标准参数
@@ -48,8 +48,8 @@ public class NettyServer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{
-			parentGroup.shutdownGracefully();
-			childGroup.shutdownGracefully();
+			boss.shutdownGracefully();
+			worker.shutdownGracefully();
 		}
 		
 		
